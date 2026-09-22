@@ -1,0 +1,27 @@
+# Organization-wide default issue chooser.
+#
+# Inherited by any repository under odal-node that does not ship its own
+# .github/ISSUE_TEMPLATE/config.yml. Repositories with their own forms
+# (dpp-core, dpp-engine) are unaffected by this file.
+#
+# blank_issues_enabled is deliberately TRUE. This default reaches repositories
+# that ship no issue forms of their own; setting it to false there would leave
+# them with no way to open an issue at all.
+blank_issues_enabled: true
+
+contact_links:
+  - name: Security vulnerability (report privately)
+    url: https://github.com/odal-node/.github/blob/main/SECURITY.md
+    about: Do not open a public issue for a vulnerability. Report it to security@odal-node.io.
+
+  - name: Question or discussion
+    url: https://github.com/odal-node/.github/blob/main/SUPPORT.md
+    about: Where to ask a question, and what makes it answerable.
+
+  - name: Documentation
+    url: https://docs.odal-node.io
+    about: Guides, API reference and the regulatory model.
+
+  - name: Contributing guide
+    url: https://github.com/odal-node/.github/blob/main/CONTRIBUTING.md
+    about: Commit format, sign-off, and what gets a change rejected.
