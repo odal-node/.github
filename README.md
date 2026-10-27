@@ -31,13 +31,13 @@ repository in the organization that does not have its own copy.
 
 | File | Applies to | Overridden in |
 |---|---|---|
-| `SECURITY.md` | dpp-web, xml-sec | dpp-core, dpp-engine |
-| `CONTRIBUTING.md` | dpp-web, xml-sec | dpp-core, dpp-engine |
-| `GOVERNANCE.md` | dpp-web, xml-sec | dpp-core, dpp-engine |
+| `SECURITY.md` | dpp-web | dpp-core, dpp-engine |
+| `CONTRIBUTING.md` | dpp-web | dpp-core, dpp-engine |
+| `GOVERNANCE.md` | dpp-web | dpp-core, dpp-engine |
 | `CODE_OF_CONDUCT.md` | every repository | none |
 | `SUPPORT.md` | every repository | none |
 | `.github/ISSUE_TEMPLATE/config.yml` | dpp-web | dpp-core, dpp-engine |
-| `.github/pull_request_template.md` | xml-sec | dpp-core, dpp-engine, dpp-web |
+| `.github/pull_request_template.md` | no repository today | dpp-core, dpp-engine, dpp-web |
 
 Things that are easy to get wrong:
 
@@ -49,12 +49,12 @@ Things that are easy to get wrong:
   issues everywhere it is inherited,** including repositories with no issue forms. They
   would have no way to file an issue. Only a repository that ships its own forms
   should turn blank issues off.
-- **`xml-sec` is a fork of someone else's project** and inherits these defaults by
-  accident. Our `CONTRIBUTING.md` would send its contributors here instead of to
-  [structured-world/xml-sec](https://github.com/structured-world/xml-sec). The engine
-  now depends on the upstream crate from crates.io, so the fork can be archived; until
-  then, give it a one-paragraph `CONTRIBUTING.md` that points upstream. Its upstream
-  `FUNDING.yml` is correct and stays.
+- **A fork of someone else's project inherits these defaults too.** Our
+  `CONTRIBUTING.md` would send its contributors here instead of upstream. Give a live
+  fork its own `CONTRIBUTING.md` that points upstream, and archive it once nothing
+  depends on it. The `xml-sec` fork is archived: the engine uses the upstream crate,
+  [structured-world/xml-sec](https://github.com/structured-world/xml-sec), from
+  crates.io.
 
 Default files are resolved on github.com when read. They are not copied into clones or
 downloads of the repositories that inherit them.

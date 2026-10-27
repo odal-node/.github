@@ -44,9 +44,9 @@ git commit -s -m "fix(resolver): reject a malformed Digital Link path"
 The sign-off certifies that you wrote the contribution, or have the right to submit
 it under the repository's licence.
 
-The licences differ between repositories. `dpp-core`, `dpp-web` and `xml-sec` are
-Apache-2.0. `dpp-engine` is BSL-1.1: source-available, converting to Apache-2.0 four
-years after each release. Read the repository's `LICENSE` before you start.
+The licences differ between repositories. `dpp-core` and `dpp-web` are Apache-2.0.
+`dpp-engine` is BSL-1.1: source-available, converting to Apache-2.0 four years after
+each release. Read the repository's `LICENSE` before you start.
 
 ## Pull requests
 
