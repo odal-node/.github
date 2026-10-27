@@ -1,105 +1,89 @@
-# Security Policy
+# Security policy
 
-**This is the coordinated vulnerability disclosure (CVD) policy for Odal Node, and
-`security@odal-node.io` is the single point of contact for reporting vulnerabilities.**
+This is the coordinated vulnerability disclosure policy for Odal Node. The contact
+for reports is **security@odal-node.io**.
 
-It is the **organization-wide default**: it applies to any repository under
+It is the organization-wide default. It applies to every repository under
 [github.com/odal-node](https://github.com/odal-node) that does not publish its own
-`SECURITY.md`. Where a repository does publish one, that file governs and this one does
-not apply to it.
+`SECURITY.md`. Where a repository has its own, that file applies instead.
 
-## Reporting a vulnerability
+## Report a vulnerability
 
-**Do not open a public issue for a security vulnerability.**
+**Do not open a public issue.** Report privately, either:
 
-Report privately to **security@odal-node.io** with:
+- through **Report a vulnerability** on the repository's **Security** tab, where it
+  is enabled. This is preferred: the report, the advisory and the fix stay together.
+- or by email to **security@odal-node.io**.
 
-1. A description of the vulnerability and its potential impact.
+Include:
+
+1. What the vulnerability is and what it allows.
 2. Steps to reproduce, or a minimal proof of concept.
-3. The affected repository, component and version — a commit SHA is ideal.
-4. Any suggested fix or mitigation, if you have one.
+3. The affected repository, component and version. A commit SHA is best.
+4. A suggested fix or mitigation, if you have one.
 
-Where GitHub private vulnerability reporting is enabled on the repository, the
-**Report a vulnerability** button on its Security tab is equally acceptable and is
-preferred, because it keeps the report, the advisory and the fix in one place.
+## Response times
 
-## What to expect
-
-| Step | Timeframe |
+| Step | Target |
 |---|---|
-| Acknowledgement of your report | Within 48 hours |
-| Initial assessment and severity classification | Within 5 business days |
-| Fix or mitigation for critical/high severity | Within 14 days |
-| Fix or mitigation for medium/low severity | Within 30 days |
-| Public disclosure, coordinated with you | After a fix is released |
+| Acknowledgement | 48 hours |
+| Initial assessment and severity | 5 business days |
+| Fix or mitigation, critical or high severity | 14 days |
+| Fix or mitigation, medium or low severity | 30 days |
+| Public disclosure | After the fix is released, coordinated with you |
 
-We follow coordinated vulnerability disclosure as recommended by the
-[OpenSSF Vulnerability Disclosure Working Group](https://github.com/ossf/wg-vulnerability-disclosures),
-and will work with you on timing and credit.
+We follow coordinated disclosure as described by the
+[OpenSSF Vulnerability Disclosure Working Group](https://github.com/ossf/wg-vulnerability-disclosures)
+and agree timing and credit with you.
 
-**This project is pre-production and maintained by one person.** The timeframes above
-are commitments we intend to meet, not a staffed on-call rotation. If a report is
-critical and you have had no acknowledgement within 48 hours, send a second mail — it
-was missed, not triaged.
+The project is pre-production and has one maintainer. These are targets, not a
+staffed on-call rotation. If a critical report gets no acknowledgement within 48
+hours, send it again: it was missed.
 
 ## Supported versions
 
-Security patches are issued for the **latest tagged release** of the affected
-repository. When a new minor version is released, the previous minor continues to
-receive security patches for **90 days**, after which support for it ends.
+Security fixes go into the **latest release** of the affected repository. After a new
+minor version, the previous minor version receives security fixes for **90 days**.
 
-The current release of any repository is on its **Releases** page, and for published
-crates on **crates.io**. This policy deliberately does not name a version number —
-a version written into a policy document goes stale silently and has done so here
-before.
+Current releases are on each repository's **Releases** page and, for published
+crates, on **crates.io**.
 
-## What we publish, and when
+## Publication
 
-- **After a fix ships, the vulnerability is published** — as a GitHub Security Advisory
-  on the affected repository and in that repository's `CHANGELOG.md`, with a description,
-  the affected versions, the impact, and what an operator has to do. A fix released
-  silently is a fix that only protects the people who happened to upgrade.
-- **We may delay publication** where the risk of disclosing outweighs the benefit — for
-  example while operators still need time to apply a patch. We do not delay it
-  indefinitely, and the reporter is told the reason and the intended date.
-- **Dependency advisories are scanned daily, not only on push.** An advisory published
-  against a dependency that is already in the tree changes nothing in the repository, so
-  nothing would trigger a run. Where that daily scan exists it is a scheduled workflow
-  in the repository; where it does not yet, that is a gap and not a decision.
+- **After a fix ships, the vulnerability is published** as a GitHub Security Advisory
+  on the affected repository and in its `CHANGELOG.md`: what it is, the affected
+  versions, the impact, and what an operator has to do.
+- **Publication may be delayed** while operators need time to apply a patch. The
+  delay is never open-ended, and you are told the reason and the planned date.
+- **Dependency advisories are scanned daily**, by a scheduled workflow, because a new
+  advisory against an existing dependency changes nothing in the repository and would
+  trigger nothing on its own. A repository without that workflow has a gap, not an
+  exemption.
 
 ## Out of scope
 
-- **Feature requests and non-security bugs.** Use the repository's issue tracker.
-- **Vulnerabilities in upstream dependencies.** Report these to the dependency
-  maintainer and to [RustSec](https://rustsec.org/). We monitor advisories via
-  `cargo audit` in CI and will publish a patched release once a fix is available
-  upstream. We cannot fix them ourselves, which is why they are out of scope for this
-  policy rather than out of mind.
-- **Findings against a deployment we do not operate.** Every Odal Node runs on its
-  operator's own infrastructure; `odal-node.io` and `docs.odal-node.io` are static
-  sites that host no passport data and no production service. A finding against a
-  self-hosted node belongs to whoever runs it — though if it is caused by our code,
-  we want to hear about it.
+- **Feature requests and ordinary bugs.** Use the repository's issue tracker.
+- **Vulnerabilities in upstream dependencies.** Report them to the dependency's
+  maintainers and to [RustSec](https://rustsec.org/). CI checks advisories with
+  `cargo audit`, and we release a patched version once an upstream fix exists.
+- **Deployments we do not operate.** Every node runs on its operator's own
+  infrastructure. `odal-node.io` and `docs.odal-node.io` are static sites with no
+  passport data and no production service. A finding against a self-hosted node
+  belongs to whoever runs it, but if our code causes it, report it here.
 
-## What we consider severe
+## Highest-severity findings
 
-Across the organization's code, the findings that matter most are:
+- Leaked key material, weak randomness, or key material in a log or error body.
+- Signature bypass or forgery: a passport accepted as signed by a key that did not
+  sign it.
+- **Audience escalation:** a caller reading data above its disclosure class. This has
+  regulatory consequences for the operator.
+- Schema or rule validation bypass that lets a non-compliant passport be published.
+- Escape from the Wasm plugin sandbox.
+- Transfer-chain integrity violations: skipped states or forged history.
 
-- Cryptographic key leakage, weak randomness, or key material reaching a log or an
-  error body.
-- Signature bypass or forgery — a passport accepted as authentic that was not signed
-  by the key it claims.
-- **Audience escalation**: any caller reading data above the disclosure class it is
-  entitled to. This is the failure mode with regulatory consequences for an operator,
-  not just for us.
-- Schema or rule validation bypass that lets a non-compliant passport be issued as
-  compliant.
-- Sandbox escape from the Wasm plugin host.
-- Transfer-chain integrity violations — skipped states, forged history.
+## Credit
 
-## Recognition
-
-We credit reporters in the CHANGELOG and release notes unless you prefer to stay
-anonymous. **We do not operate a bug bounty programme and do not pay for reports.**
-Unsolicited mail offering paid "fixes" or demanding payment for a disclosure will not
-receive a reply.
+Reporters are credited in the CHANGELOG and release notes unless they prefer to stay
+anonymous. **There is no bug bounty.** Unsolicited offers of paid fixes, and demands
+for payment, get no reply.

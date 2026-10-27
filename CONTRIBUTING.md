@@ -1,90 +1,85 @@
 # Contributing
 
-This is the **organization-wide default** for Odal Node. It covers what is true in every
-repository under [github.com/odal-node](https://github.com/odal-node).
+The organization-wide default for every repository under
+[github.com/odal-node](https://github.com/odal-node).
 
-**`dpp-core` and `dpp-engine` publish their own `CONTRIBUTING.md`.** Those files govern
-in those repositories — read them instead, because they carry the build commands, the
-crate layout and the dependency rules that this file cannot.
+`dpp-core` and `dpp-engine` publish their own `CONTRIBUTING.md` with build commands,
+crate layout and dependency rules. In those repositories, read theirs.
 
 ## Before you write code
 
-**Open an issue first for anything beyond a typo.** Not as a formality: this project
-encodes EU regulation, and a change that looks like a clean refactor can move a
-regulatory claim to a place where it is no longer checkable. A short issue costs you ten
-minutes and can save a rewrite.
+**Open an issue first for anything larger than a typo.** This code encodes EU
+regulation, and a change that looks like a refactor can move a regulatory rule to a
+place where no test checks it. A short issue up front is cheaper than a rewrite.
 
-For a change that touches a regulatory constant, a threshold, a date, a product scope or
-a disclosure class, say in the issue **which primary source you read**. Not a blog post,
-not a summary, not a secondary tracker — the Official Journal text, the standard, or the
-regulator's own published guidance. A claim without a source you personally read will
-not be merged, however plausible it is.
+If the change touches a regulatory constant, threshold, date, product scope or
+disclosure class, name the **primary source** you read in the issue: the Official
+Journal text, the standard, or the regulator's own published guidance. A blog post,
+summary or secondary tracker is not a source. Changes without a primary source are
+not merged.
 
 ## Commits
 
-[Conventional Commits](https://www.conventionalcommits.org/) v1.0.0:
+Use [Conventional Commits](https://www.conventionalcommits.org/) v1.0.0:
 
-```
+```text
 <type>(<scope>): <subject>
 ```
 
-- **Types:** `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `security`
-- **Subject:** imperative, under 50 characters — "add fix", not "added fix".
-- **Breaking changes:** `!` after the scope — `feat(domain)!: remove deprecated field`.
-- **Scope** is the functional area touched, never the repository's own name.
-
-**Never include AI attribution**, `Co-Authored-By` trailers naming a tool, or generated
-sign-offs. Use of a tool is not a fact about the change.
+- **Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `perf`, `chore`, `ci`, `build`, `style`, `revert`. In `dpp-core` and `dpp-engine`, CI rejects a pull request title with any other type.
+- **Subject:** imperative mood, under 50 characters: "add fix", not "added fix".
+- **Breaking change:** `!` after the scope, for example `feat(domain)!: remove deprecated field`.
+- **Scope:** the functional area touched, never the repository's own name.
+- **No AI attribution** and no `Co-Authored-By` trailer naming a tool.
 
 ### Sign-off
 
-Commits must be signed off under the
+Sign off each commit under the
 [Developer Certificate of Origin v1.1](https://developercertificate.org/):
 
 ```bash
 git commit -s -m "fix(resolver): reject a malformed Digital Link path"
 ```
 
-By signing off you certify you wrote the contribution, or have the right to submit it
-under that repository's licence. CI rejects commits without the line.
+The sign-off certifies that you wrote the contribution, or have the right to submit
+it under the repository's licence.
 
-**Note the licences differ.** `dpp-core` and `xml-sec` are Apache-2.0. `dpp-engine` is
-BSL-1.1. Contributing to the engine means contributing to a source-available project
-that converts to an open licence on its change date — read its `LICENSE` before you
-start, not after.
+The licences differ between repositories. `dpp-core`, `dpp-web` and `xml-sec` are
+Apache-2.0. `dpp-engine` is BSL-1.1: source-available, converting to Apache-2.0 four
+years after each release. Read the repository's `LICENSE` before you start.
 
 ## Pull requests
 
-- Every change goes through a pull request. No direct pushes to `main`.
-- The PR title is a Conventional Commit: it becomes the squash subject and cannot be
-  corrected once a release is cut from it.
-- All CI checks pass before review is requested. Green CI is the entry condition, not
-  the goal.
-- A new dependency needs a sentence in the description saying why. A new *direct*
-  dependency in a published crate needs a paragraph.
-- Branch names mirror the commit type: `feat/…`, `fix/…`, `docs/…`, `chore/…`.
+- Every change goes through a pull request. Nobody pushes directly to `main`.
+- The pull request title is a Conventional Commit. It becomes the squash commit
+  subject and cannot be changed after a release is cut from it.
+- CI passes before you request review.
+- A new dependency needs one sentence in the description saying why. A new direct
+  dependency of a published crate needs a paragraph.
+- Branch names follow the commit type: `feat/…`, `fix/…`, `docs/…`, `chore/…`.
+- Open unfinished work as a draft. A pull request marked ready has nothing stubbed,
+  marked `TODO` or left for a follow-up.
 
-**Do not leave work stubbed, `TODO`-ed, or deferred to "a follow-up" in a PR you have
-marked ready.** Open it as a draft instead.
+Documentation changes follow the [documentation style guide](DOCS-STYLE.md).
 
-## What will get a change rejected
+## What gets a change rejected
 
-- **A regulatory claim with no source**, or a source that is a secondary summary.
-- **A plan written as an accomplishment.** "Validates X" when it does not yet. If you are
-  describing intent, use the future tense and say what condition would make it true.
-- **A hardcoded version, date or deadline in a document.** Those go stale silently. Point
-  at the place that owns the fact.
-- **Anything that widens what a caller can read.** Disclosure classes are the one place
-  where a permissive default has regulatory consequences for an operator.
-- **Secrets, credentials, keystores or `.env` files in the diff**, including in a test
-  fixture. A leak cannot be un-pushed.
+- **A regulatory claim without a primary source.**
+- **Planned behaviour described as current.** "Validates X" when it does not yet.
+  Describe intent in the future tense and say what would make it true.
+- **A version, date or deadline hard-coded into a document.** Link to the place that
+  owns the value.
+- **Anything that widens what a caller can read.** Disclosure classes are where a
+  permissive default has regulatory consequences for an operator.
+- **Secrets, credentials, keystores or `.env` files in the diff**, test fixtures
+  included. A pushed secret is public.
 - **A real company's name in a test fixture.** It implies a relationship that may not
   exist.
 
 ## Security
 
-Do not report a vulnerability in a pull request or a public issue — that publishes it.
-See [SECURITY.md](SECURITY.md).
+Do not report a vulnerability in a pull request or a public issue. See
+[SECURITY.md](SECURITY.md).
 
 ## Conduct
 

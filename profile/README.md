@@ -1,73 +1,91 @@
 # Odal Node
 
-Infrastructure for EU Digital Product Passports. An Apache-2.0 Rust standard library
-anyone can build on, and a source-available node that issues, signs and serves
-passports **on infrastructure you control** — not on ours.
+Self-hosted software for issuing, signing and serving EU Digital Product Passports
+(DPPs), written in Rust.
 
-> **Pre-production, in active development.** No operator is running this against real
-> product data yet. Read the code before you depend on it.
+`dpp-core` is an open-source Rust library under Apache-2.0: stateless, with no
+database and no network I/O. `dpp-engine` is the self-hostable node built on it,
+under the Business Source License 1.1. Running it in production for your own
+organisation's products and compliance obligations is free. Offering it to third
+parties as a hosted service, or embedding it in a competing product, needs a
+commercial licence.
 
-## Start here
+> [!NOTE]
+> **Status: pre-production.** CI runs the full passport lifecycle against
+> PostgreSQL on every change, but no operator runs a node against real product
+> data yet. APIs and schemas still change between minor versions.
 
-| | |
-|---|---|
-| **[dpp-core](https://github.com/odal-node/dpp-core)** | **The standard.** Domain types, Ed25519/JWS signing, W3C Verifiable Credentials, GS1 Digital Link, versioned JSON Schema validation. Stateless — no database, no HTTP framework, no infrastructure. **Apache-2.0.** |
-| **[dpp-engine](https://github.com/odal-node/dpp-engine)** | **The node.** HTTP services, PostgreSQL persistence, sandboxed Wasm plugin host, public Digital Link resolver, and a command-line control plane. Built on dpp-core. **BSL-1.1 — self-hosting for your own compliance obligations is free.** |
-| **[dpp-web](https://github.com/odal-node/dpp-web)** | The sites: [odal-node.io](https://odal-node.io) and [docs.odal-node.io](https://docs.odal-node.io). |
+## Repositories
 
-**Documentation → [docs.odal-node.io](https://docs.odal-node.io)**
+| Repository | Licence | What it is |
+|---|---|---|
+| [**dpp-core**](https://github.com/odal-node/dpp-core) | Apache-2.0 | Rust crates on [crates.io](https://crates.io/crates/dpp-domain): the passport data model, versioned JSON Schemas per product group, regulatory validation rules, Ed25519/JWS signing, W3C Verifiable Credentials, GS1 Digital Link parsing, Asset Administration Shell export, and EU registry types. |
+| [**dpp-engine**](https://github.com/odal-node/dpp-engine) | BSL-1.1 | The node: an Axum HTTP API over PostgreSQL, `did:web` signing identity, a public GS1 Digital Link resolver, a wasmtime sandbox for product group plugins, CSV/XLSX bulk import, and the `odal` CLI. |
+| [**dpp-web**](https://github.com/odal-node/dpp-web) | Apache-2.0 | The sites: [odal-node.io](https://odal-node.io) and [docs.odal-node.io](https://docs.odal-node.io). |
 
-## Where code goes
+## How the pieces fit
 
-If something changes because an **EU regulation** changed, it belongs in `dpp-core`.
-If it changes because of **how a system is deployed, run or operated**, it belongs in
-`dpp-engine`.
+```mermaid
+flowchart LR
+    subgraph infra["Your infrastructure"]
+        client["odal CLI, ERP or script"] -->|"REST, API key"| node["dpp-node<br/>HTTP API"]
+        node --> pg[("PostgreSQL")]
+        node --> wasm["Wasm plugins<br/>(sandboxed)"]
+        resolver["dpp-resolver<br/>public, read-only"] -->|"published passports"| node
+    end
+    scan["QR scan or verifier"] -->|"GS1 Digital Link"| resolver
+    node -.->|"registration"| registry["EU DPP registry"]
+```
 
-That split is the point, not an implementation detail. It is what lets the regulatory
-half stay Apache-2.0 and be vendored by anyone — including people who will never run
-our node.
+Both binaries compile `dpp-core` in. A passport is signed with your key, and anyone
+can verify it against your public `did:web` document without contacting Odal.
 
-## Self-hosted first. Managed operation is coming.
+## Why self-host
 
-**Everything needed to run a node yourself is in these repositories and stays there.**
-The engine's free self-host grant is a licence term, not a trial tier.
+- **Your data stays with you.** Product, supplier and bill-of-materials data is
+  stored in your own PostgreSQL. Odal never receives it. What leaves your network is
+  what you configure or the law requires: the public passport view, the EU registry
+  submission, and the independent back-up copy.
+- **No lock-in.** The data model, schemas and validation rules are Apache-2.0.
+  Passports are signed with your key and verify without any Odal service.
+- **One node per company.** One database, one signing key, nothing shared with
+  another operator.
 
-Not every obligated company wants to operate one. **Managed operation — we run the
-node, you keep it** — is being built now and is not yet open. The provisioning and
-fleet-operation tooling behind it is closed and will stay closed: it is the commercial
-half of an open-core project, and the reason the rest can be given away.
+## Get started
 
-It changes nothing about the isolation model, which is already settled: **one operator,
-one node, one database, one key, and no shared data paths at any layer.** A shared
-endpoint holding everyone's passports would invert the whole proposition. What is still
-open is only how the machines get provisioned.
+- **Use the library:** `cargo add dpp-domain`, then the
+  [dpp-core quick start](https://github.com/odal-node/dpp-core#quick-start).
+- **Run a node:** the [dpp-engine quick start](https://github.com/odal-node/dpp-engine#quick-start)
+  takes you from `git clone` to a published, resolvable passport.
+- **Read the docs:** [docs.odal-node.io](https://docs.odal-node.io), including the
+  [API reference](https://docs.odal-node.io/api/).
 
-**[Join the waitlist →](https://odal-node.io/waitlist)**
-
-## Upstream
-
-`dpp-engine` verifies EU Trusted List signatures with
-[**xml-sec**](https://github.com/structured-world/xml-sec) — pure-Rust XMLDSig, XMLEnc
-and C14N, written by [**@polaz**](https://github.com/polaz) at
-[Structured World](https://github.com/structured-world) and published under Apache-2.0.
-Our [fork](https://github.com/odal-node/xml-sec) exists only to carry one patch while
-[structured-world/xml-sec#158](https://github.com/structured-world/xml-sec/issues/158)
-is open. It is their project, not ours.
+Managed operation (a node run for you, still one node per company) is under
+consideration and not offered. It is listed on the
+[roadmap](https://odal-node.io/roadmap/) with everything else that is planned or
+being built.
 
 ## Questions and contributions
 
 Ask in Discussions on [dpp-core](https://github.com/odal-node/dpp-core/discussions) or
-[dpp-engine](https://github.com/odal-node/dpp-engine/discussions) rather than by email
-where you can — an answer in public is read many times.
-[SUPPORT.md](https://github.com/odal-node/.github/blob/main/SUPPORT.md) covers what makes
-a question answerable and what this project cannot advise on;
-[CONTRIBUTING.md](https://github.com/odal-node/.github/blob/main/CONTRIBUTING.md) covers
-commits, sign-off, and what gets a change rejected.
+[dpp-engine](https://github.com/odal-node/dpp-engine/discussions); public answers help
+the next person too. [SUPPORT.md](https://github.com/odal-node/.github/blob/main/SUPPORT.md)
+lists where each kind of question goes, and
+[CONTRIBUTING.md](https://github.com/odal-node/.github/blob/main/CONTRIBUTING.md)
+covers commits and pull requests.
 
-The most valuable report we can receive is **"the software is wrong about EU law, and
-here is the text I read it against."**
+The most useful report is a place where the software disagrees with EU law, with
+the text you read it against.
 
 ## Security
 
-Report vulnerabilities privately to **security@odal-node.io**. Never in a public issue.
-Full policy: [SECURITY.md](https://github.com/odal-node/.github/blob/main/SECURITY.md)
+Report vulnerabilities privately to **security@odal-node.io** or through the
+repository's **Report a vulnerability** button, never in a public issue. Policy:
+[SECURITY.md](https://github.com/odal-node/.github/blob/main/SECURITY.md).
+
+## Credits
+
+`dpp-engine` verifies EU Trusted List signatures with
+[xml-sec](https://github.com/structured-world/xml-sec), a pure-Rust implementation
+of XMLDSig, XMLEnc and C14N by [@polaz](https://github.com/polaz) at
+[Structured World](https://github.com/structured-world), published under Apache-2.0.
