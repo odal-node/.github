@@ -117,8 +117,15 @@ external users. Every front door says so.
 - **Never quote a CEN, CENELEC or ISO standard** (EN 18219, EN 18221 and others).
   They are sold per reader. Cite the clause and describe what it requires in your
   own words.
-- Regulatory dates live in code (the instrument catalog in `dpp-domain`). Prose
-  links to them.
+- **Passport dates live in code**, in the instrument catalog in `dpp-domain`. The
+  two websites render them from a vendored copy of it (`<PassportDate act="<id>" />`
+  on the docs site, `passportDateOf("<id>")` on the landing site), and the build
+  fails for an act with no sourced date. A repository README links to the catalog
+  instead of copying a date.
+- **Any other regulatory date** (a transition period, a Commission deadline, the
+  day an act applies) is written beside the article that sets it, so a reader can
+  check it against the act. A date inside a quotation of the Official Journal stays
+  as the act prints it.
 
 ## Publication rules
 
