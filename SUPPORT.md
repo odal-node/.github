@@ -41,6 +41,7 @@ searches later.
 
 ## The websites
 
-`odal-node.io` and `docs.odal-node.io` carry documentation, schemas, vocabulary and
-**demonstration** passports. They host no operator's data and no production service.
+`odal-node.io` and `docs.odal-node.io` carry documentation and **demonstration** data:
+an example passport and example proof files. They host no operator's data and no
+production service.
 Real passports are served by each operator's own node, on the operator's own domain.
