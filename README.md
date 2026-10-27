@@ -21,6 +21,9 @@ Rules for editing it:
 - **Check every link before pushing.** On the landing site, source files prefixed `_`
   are not built, so a page that exists in the source tree can still be a 404.
 
+The profile's credits live in [CREDITS.md](CREDITS.md), which the profile links to.
+A project belongs there when it meets one of the three tests the file is organised by.
+
 All documentation in the organization follows [DOCS-STYLE.md](DOCS-STYLE.md).
 
 ## 2. Default community health files

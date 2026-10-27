@@ -133,7 +133,8 @@ repository's **Report a vulnerability** button, never in a public issue. Policy:
 
 ## Credits
 
-`dpp-engine` verifies EU Trusted List signatures with
-[xml-sec](https://github.com/structured-world/xml-sec), a pure-Rust implementation
-of XMLDSig, XMLEnc and C14N by [@polaz](https://github.com/polaz) at
-[Structured World](https://github.com/structured-world), published under Apache-2.0.
+Odal Node builds on other people's open-source work and is tested against it.
+[CREDITS.md](https://github.com/odal-node/.github/blob/main/CREDITS.md) names those
+projects and what each one does here: upstream maintainers who fixed what we
+reported, the reference implementations `dpp-core` is tested against, and the
+single-maintainer libraries in the signing and validation path.
