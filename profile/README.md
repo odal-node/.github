@@ -19,33 +19,81 @@ commercial licence.
 
 | Repository | Licence | What it is |
 |---|---|---|
-| [**dpp-core**](https://github.com/odal-node/dpp-core) | Apache-2.0 | Rust crates on [crates.io](https://crates.io/crates/dpp-domain): the passport data model, versioned JSON Schemas per product group, regulatory validation rules, Ed25519/JWS signing, W3C Verifiable Credentials, GS1 Digital Link parsing, Asset Administration Shell export, and EU registry types. |
-| [**dpp-engine**](https://github.com/odal-node/dpp-engine) | BSL-1.1 | The node: an Axum HTTP API over PostgreSQL, `did:web` signing identity, a public GS1 Digital Link resolver, a wasmtime sandbox for product group plugins, CSV/XLSX bulk import, and the `odal` CLI. |
+| [**dpp-core**](https://github.com/odal-node/dpp-core) | Apache-2.0 | Rust crates on [crates.io](https://crates.io/crates/dpp-domain): the passport data model, versioned JSON Schemas per product group, regulatory validation rules, Ed25519/JWS signing, W3C Verifiable Credentials, product identifiers and their digital links (GS1 Digital Link, identification link, DID), Asset Administration Shell export, and EU registry types. |
+| [**dpp-engine**](https://github.com/odal-node/dpp-engine) | BSL-1.1 | The node: an Axum HTTP API over PostgreSQL, `did:web` signing identity, a public resolver for each passport's digital link, a wasmtime sandbox for product group plugins, CSV/XLSX bulk import, and the `odal` CLI. |
 | [**dpp-web**](https://github.com/odal-node/dpp-web) | Apache-2.0 | The sites: [odal-node.io](https://odal-node.io) and [docs.odal-node.io](https://docs.odal-node.io). |
 
 ## How the pieces fit
 
 ```mermaid
 flowchart LR
-    subgraph infra["Your infrastructure"]
-        client["odal CLI, ERP or script"] -->|"REST, API key"| node["dpp-node<br/>HTTP API"]
-        node --> pg[("PostgreSQL")]
-        node --> wasm["Wasm plugins<br/>(sandboxed)"]
-        resolver["dpp-resolver<br/>public, read-only"] -->|"published passports"| node
+    subgraph oss["Open source, on crates.io"]
+        core["dpp-core<br/>model, schemas, rules,<br/>signing, identifiers"]
     end
-    scan["QR scan or verifier"] -->|"GS1 Digital Link"| resolver
-    node -.->|"registration"| registry["EU DPP registry"]
+
+    subgraph own["Your systems"]
+        erp["ERP, PLM or scripts<br/>REST API, webhooks"]
+        sheets["Spreadsheets<br/>bulk import"]
+        cli["odal CLI"]
+    end
+
+    subgraph infra["Your infrastructure"]
+        node["dpp-node<br/>validate, sign, publish,<br/>lifecycle, audit trail"]
+        plugins["Product group plugins<br/>Wasm sandbox"]
+        keys[("Signing key")]
+        pg[("PostgreSQL")]
+        resolver["dpp-resolver<br/>public, read-only"]
+    end
+
+    subgraph world["Outside your network"]
+        scan["Anyone scanning the code<br/>reads the public view"]
+        holder["Repairers, recyclers<br/>read restricted parts<br/>with a credential"]
+        verifier["Verifiers fetch your<br/>did:web document"]
+        supplier["Suppliers' passports<br/>pinned as components"]
+        registry["EU DPP registry<br/>receives registrations"]
+        backup["Independent provider<br/>holds a back-up copy"]
+    end
+
+    core --> node & resolver & plugins
+    erp <--> node
+    sheets --> node
+    cli --> node
+    node --- plugins & keys & pg
+    node --> resolver --> scan
+    node --> holder & verifier
+    node --- supplier
+    node -.-> registry & backup
 ```
 
-Both binaries compile `dpp-core` in. A passport is signed with your key, and anyone
-can verify it against your public `did:web` document without contacting Odal.
+Everything in the middle box runs on your infrastructure. Odal operates none of it
+and receives none of its data. Both binaries compile `dpp-core` in, and product group
+plugins are written against its plugin SDK.
+
+- **Your systems** talk to the node over its REST API with an API key, or import
+  spreadsheets in bulk. The node calls them back with a signed webhook whenever a
+  passport changes.
+- **The digital link** on the product opens the passport at your resolver: a GS1
+  Digital Link when the product has a GTIN, otherwise the passport's own address. The
+  resolver only ever serves the public view.
+- **Restricted parts** of a passport are read from the node with an access credential
+  that names the reader's role.
+- **Signatures** are made with your key and verify against your public `did:web`
+  document, without contacting Odal.
+- **Component passports** can live on other companies' nodes. A passport pins the
+  hash of each component's signed public view, and the node fetches the components
+  down the bill of materials and checks every pin.
+- **Dotted lines** need configuration. The EU registry connection queues every
+  registration but submits nothing until registry credentials are set, and then only
+  to the registry's sandbox. The back-up copy needs object storage held by an
+  independent provider.
 
 ## Why self-host
 
 - **Your data stays with you.** Product, supplier and bill-of-materials data is
   stored in your own PostgreSQL. Odal never receives it. What leaves your network is
-  what you configure or the law requires: the public passport view, the EU registry
-  submission, and the independent back-up copy.
+  what you configure or the law requires: the public passport view, the restricted
+  parts a credential holder may read, the EU registry submission, and the independent
+  back-up copy.
 - **No lock-in.** The data model, schemas and validation rules are Apache-2.0.
   Passports are signed with your key and verify without any Odal service.
 - **One node per company.** One database, one signing key, nothing shared with

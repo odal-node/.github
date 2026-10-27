@@ -10,9 +10,9 @@ any repository, and a change goes live the moment it is pushed.
 
 Rules for editing it:
 
-- **Keep it a signpost.** One screen: what the project is, the licence split, the
-  status, and links. Do not restate a repository README; search engines would see two
-  competing descriptions of the same project.
+- **Keep it a signpost.** What the project is, the licence split, the status, how the
+  pieces fit, and links. Do not restate a repository README; search engines would see
+  two competing descriptions of the same project.
 - **No dated regulatory claims.** No mandate dates, thresholds or standard numbers.
   They live in `dpp-core`'s instrument catalog and go stale when copied.
 - **Public facts only.** Name no non-public repository. Make no claim about users,
