@@ -113,6 +113,20 @@ consideration and not offered. It is listed on the
 [roadmap](https://odal-node.io/roadmap/) with everything else that is planned or
 being built.
 
+## Credits
+
+Odal Node builds on other people's open-source work and is tested against it.
+[CREDITS.md](https://github.com/odal-node/.github/blob/main/CREDITS.md) names those
+projects and what each one does here: upstream maintainers who fixed what we
+reported, the reference implementations `dpp-core` is tested against, and the
+single-maintainer libraries in the signing and validation path.
+
+## Security
+
+Report vulnerabilities privately to **security@odal-node.io** or through the
+repository's **Report a vulnerability** button, never in a public issue. Policy:
+[SECURITY.md](https://github.com/odal-node/.github/blob/main/SECURITY.md).
+
 ## Questions and contributions
 
 Ask in Discussions on [dpp-core](https://github.com/odal-node/dpp-core/discussions) or
@@ -125,16 +139,3 @@ covers commits and pull requests.
 The most useful report is a place where the software disagrees with EU law, with
 the text you read it against.
 
-## Security
-
-Report vulnerabilities privately to **security@odal-node.io** or through the
-repository's **Report a vulnerability** button, never in a public issue. Policy:
-[SECURITY.md](https://github.com/odal-node/.github/blob/main/SECURITY.md).
-
-## Credits
-
-Odal Node builds on other people's open-source work and is tested against it.
-[CREDITS.md](https://github.com/odal-node/.github/blob/main/CREDITS.md) names those
-projects and what each one does here: upstream maintainers who fixed what we
-reported, the reference implementations `dpp-core` is tested against, and the
-single-maintainer libraries in the signing and validation path.
