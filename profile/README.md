@@ -1,7 +1,14 @@
+![Odal Node: Signed by you. Verified by anyone. Your passports. Your keys. Your node.](https://raw.githubusercontent.com/odal-node/.github/main/profile/odal-node.png)
+
 # Odal Node
 
 Self-hosted software for issuing, signing and serving EU Digital Product Passports
 (DPPs), written in Rust.
+
+Today it is built for engineering teams and integrators: you run the node, and your
+systems call its REST API or the `odal` CLI. The aim is a node that any company with
+a passport obligation can run, SMEs included. Ready-made images and a web dashboard
+are Planned on the [roadmap](https://odal-node.io/roadmap/).
 
 `dpp-core` is an open-source Rust library under Apache-2.0: stateless, with no
 database and no network I/O. `dpp-engine` is the self-hostable node built on it,
@@ -11,9 +18,11 @@ parties as a hosted service, or embedding it in a competing product, needs a
 commercial licence.
 
 > [!NOTE]
-> **Status: pre-production.** CI runs the full passport lifecycle against
+> **Status: alpha, pre-production.** CI runs the full passport lifecycle against
 > PostgreSQL on every change, but no operator runs a node against real product
-> data yet. APIs and schemas still change between minor versions.
+> data yet. APIs and schemas still change between minor versions. To try it against
+> your own product data, start a thread in
+> [Discussions](https://github.com/odal-node/dpp-engine/discussions).
 
 ## Repositories
 
