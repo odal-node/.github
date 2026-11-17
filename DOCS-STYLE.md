@@ -107,8 +107,10 @@ The same five labels as the public roadmap:
 | Planned | Committed to, not started |
 | Considered | Under evaluation, no commitment |
 
-The project as a whole is **pre-production**: no production deployments and no
-external users. Every front door says so.
+The project as a whole is **alpha** and **pre-production**. Alpha is the stage of
+the software: interfaces and schemas still change between minor versions.
+Pre-production is its use: no production deployments and no external users. Every
+front door gives both, in one status line: **Status: alpha, pre-production.**
 
 ## Regulatory and standards text
 
