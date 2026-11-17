@@ -1,3 +1,5 @@
+![Odal Node: Signed by you. Verified by anyone. A passport passes six stations on a node the company runs itself: validate, sign, resolve, disclose, hand over, verify. A passport node for every company that owes a passport.](https://raw.githubusercontent.com/odal-node/.github/main/profile/odal-node.png)
+
 # Odal Node
 
 Self-hosted software for issuing, signing and serving EU Digital Product Passports
