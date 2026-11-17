@@ -5,17 +5,17 @@
 Self-hosted software for issuing, signing and serving EU Digital Product Passports
 (DPPs), written in Rust.
 
-Today it is built for engineering teams and integrators: you run the node, and your
-systems call its REST API or the `odal` CLI. The aim is a node that any company with
-a passport obligation can run, SMEs included. Ready-made images and a web dashboard
-are Planned on the [roadmap](https://odal-node.io/roadmap/).
-
 `dpp-core` is an open-source Rust library under Apache-2.0: stateless, with no
 database and no network I/O. `dpp-engine` is the self-hostable node built on it,
 under the Business Source License 1.1. Running it in production for your own
 organisation's products and compliance obligations is free. Offering it to third
 parties as a hosted service, or embedding it in a competing product, needs a
 commercial licence.
+
+Today it is built for engineering teams and integrators: you run the node, and your
+systems call its REST API or the `odal` CLI. The aim is a node that any company with
+a passport obligation can run, SMEs included. Ready-made images and a web dashboard
+are Planned on the [roadmap](https://odal-node.io/roadmap/).
 
 > [!NOTE]
 > **Status: alpha, pre-production.** CI runs the full passport lifecycle against
